@@ -17,5 +17,9 @@ public class DuckMovement : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+    }
+
 
 }
