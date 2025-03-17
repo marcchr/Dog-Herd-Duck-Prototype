@@ -88,7 +88,7 @@ public class FieldOfView : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Vector3 mousePosition = Input.mousePosition;
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);

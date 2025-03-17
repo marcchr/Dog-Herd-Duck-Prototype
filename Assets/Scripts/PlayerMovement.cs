@@ -8,13 +8,11 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 movementDirection;
-    private SpriteRenderer spriteRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -22,16 +20,21 @@ public class PlayerMovement : MonoBehaviour
     {
         movementDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         
-            if (Input.GetAxis("Horizontal") < 0)
-            {
-                spriteRenderer.flipX = false;
-            }
-            else if (Input.GetAxis("Horizontal") > 0)
-            {
-                spriteRenderer.flipX = true;
-            }
+        if (Input.GetAxis("Horizontal") < 0)
+        {
+            //spriteRenderer.flipX = false;
+            //animator.SetBool("isWalking", true);
+      
+        }
+        else if (Input.GetAxis("Horizontal") > 0)
+        {
+            //spriteRenderer.flipX = true;
+            //animator.SetBool("isWalking", true);
 
-        
+        }
+
+
+
         //SightRaycast();
     }
 
