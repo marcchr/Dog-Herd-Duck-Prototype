@@ -9,63 +9,86 @@ public class DuckMovement : MonoBehaviour
 
     public float searchRadius = 5f;
     public float moveSpeed = 2f;
-    private Vector2 targetPosition;
+    public float waitTimeMin = 1f, waitTimeMax = 6f;
+    private Vector3 targetPosition;
+
+    private float deltaX;
+    private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
-        targetPosition = transform.position;
+        // targetPosition = transform.position;
         targetLayer = LayerMask.GetMask("Ducks");
         StartCoroutine(Wander());
-    }
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        float force = 1f;
-        if (collision.gameObject.tag == "Dog")
-        {
-            Vector3 direction = collision.transform.position - transform.position;
-
-            direction = -direction.normalized;
-
-            gameObject.GetComponent<Rigidbody>().AddForce(direction * force);
-        }
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     private IEnumerator Wander()
     {
-        WaitForSeconds wait = new WaitForSeconds(Random.Range(1f, 6f));
-
         while (true)
         {
-            yield return wait;
-            SetRandomTarget();
+            GetRandomPoint();
             SearchOtherDucks();
 
+            
+
+            float elapsedTime = 0f;
+
+            while (elapsedTime <= 1f)
+            {
+                elapsedTime += Time.deltaTime;
+
+                transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed*Time.deltaTime);
+                yield return null;
+            }
+
+            float waitTime = Random.Range(waitTimeMin, waitTimeMax);
+            yield return new WaitForSeconds(waitTime);
+            
         }
+
     }
 
-    private void SetRandomTarget()
+    private void GetRandomPoint()
     {
-        Vector2 randomPoint = Random.insideUnitCircle.normalized;
-        targetPosition = new Vector2(transform.position.x + randomPoint.x, transform.position.y + randomPoint.y);
-         // (Vector2.Distance(transform.position, targetPosition) > 0.01f)
-        
+        float randomX = Random.Range(-4, 4);
+        float randomY = Random.Range(-4, 4);
+        targetPosition = new Vector3(transform.position.x + randomX, transform.position.y + randomY, transform.position.z);
     }
 
     private void SearchOtherDucks()
     {
         rangeCheck = Physics2D.OverlapCircleAll(transform.position, searchRadius, targetLayer);
+        if (rangeCheck.Length > 4)
+        {
+            targetPosition = rangeCheck[Random.Range(0, rangeCheck.Length-1)].transform.position;
+        }
 
     }
 
     private void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        //float currentX = transform.position.x;
+        //float previousX = currentX;
 
-        if (rangeCheck.Length > 0 )
+        //transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        //currentX = transform.position.x;
+
+        //if (rangeCheck.Length > 1 )
+        //{
+            //targetPosition = rangeCheck[0].gameObject.transform.position;
+            //transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        //}
+
+        //deltaX = currentX - previousX;
+        if (targetPosition.x - transform.position.x < 0)
         {
-            targetPosition = rangeCheck[0].gameObject.transform.position;
+            spriteRenderer.flipX = false;
         }
-
+        else
+        {
+            spriteRenderer.flipX = true;
+        }
     }
 
 

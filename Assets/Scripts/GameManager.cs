@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject herd;
+    public GameObject spawner;
     public TextMeshProUGUI herdedNumText;
     public TextMeshProUGUI levelCompleteText;
     int herdedNum = 0;
-    int herdTotal = 0;
+    int herdTotal;
 
     // Start is called before the first frame update
     void Start()
     {
-        herdTotal = herd.GetComponent<Herd>().startingCount;
+        herdTotal = spawner.GetComponent<DuckSpawner>().amountToSpawn;
         herdedNumText.text = "Ducks herded: " + herdedNum.ToString() + "/" + herdTotal.ToString();
     }
 
@@ -25,19 +25,20 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void SubtractFromHerd()
     {
-        if (collision.GetComponent<HerdAgent>() != null)
-        {
-            collision.gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
-            collision.gameObject.GetComponent<CircleCollider2D>().enabled = false;
-            AddToHerd();
-        }
+        herdedNum--;
+        herdedNumText.text = "Ducks herded: " + herdedNum.ToString() + "/" + herdTotal.ToString();
+
     }
+
+    
 
     // Update is called once per frame
     void Update()
     {
+        herdTotal = spawner.GetComponent<DuckSpawner>().amountToSpawn;
+
         if (herdedNum == herdTotal)
         {
             LevelComplete();
