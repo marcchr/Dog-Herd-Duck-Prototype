@@ -14,6 +14,7 @@ public class DuckMovement : MonoBehaviour
 
     private float deltaX;
     private SpriteRenderer spriteRenderer;
+    public Animator animator;
 
     private void Start()
     {
@@ -21,6 +22,7 @@ public class DuckMovement : MonoBehaviour
         targetLayer = LayerMask.GetMask("Ducks");
         StartCoroutine(Wander());
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     private IEnumerator Wander()
@@ -34,13 +36,17 @@ public class DuckMovement : MonoBehaviour
 
             float elapsedTime = 0f;
 
+
             while (elapsedTime <= 1f)
             {
-                elapsedTime += Time.deltaTime;
+                animator.SetBool("isWalking", true);
 
+                elapsedTime += Time.deltaTime;
                 transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed*Time.deltaTime);
                 yield return null;
             }
+            animator.SetBool("isWalking", false);
+
 
             float waitTime = Random.Range(waitTimeMin, waitTimeMax);
             yield return new WaitForSeconds(waitTime);
