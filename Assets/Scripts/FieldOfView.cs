@@ -13,6 +13,7 @@ public class FieldOfView : MonoBehaviour
     public Collider2D[] rangeCheck;
 
     public List<Transform> objectsInFOV;
+    public float pushSpeed = 3f;
 
     void Start()
     {
@@ -29,6 +30,7 @@ public class FieldOfView : MonoBehaviour
         {
             yield return wait;
             FOV();
+            //PushAway();
         }
     }
 
@@ -59,6 +61,42 @@ public class FieldOfView : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void PushAway()
+    {
+        float speedMultiplier = 1f;
+        float step = pushSpeed * speedMultiplier * Time.deltaTime;
+        for (int i = 0; i < objectsInFOV.Count; i++)
+        {
+            Transform target = objectsInFOV[i].transform;
+            Vector2 directionToTarget = (target.position - transform.position).normalized;
+            
+            speedMultiplier = 5f * radius/Vector2.Distance(target.position, transform.position);
+
+            target.transform.position = Vector2.MoveTowards(target.position, (Vector2)target.position+directionToTarget, step);
+        }
+
+        for (int i = 0; i < rangeCheck.Length; i++)
+        {
+            Transform target = rangeCheck[i].transform;
+            Vector2 directionToTarget = (target.position - transform.position).normalized;
+
+            speedMultiplier = 1f * radius / Vector2.Distance(target.position, transform.position);
+
+            target.transform.position = Vector2.MoveTowards(target.position, (Vector2)target.position + directionToTarget, step);
+        }
+    }
+
+    private void Update()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+        Vector2 direction = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y);
+        transform.up = direction;
+
+        PushAway();
     }
 
     private void OnDrawGizmos()
