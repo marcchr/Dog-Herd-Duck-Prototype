@@ -12,7 +12,10 @@ public class DuckMovement : MonoBehaviour
     public float waitTimeMin = 1f, waitTimeMax = 6f;
     private Vector3 targetPosition;
 
-    private float deltaX;
+    private Vector2 lastPos;
+    private Vector2 currentPos;
+    enum Direction { Right, Left, Still };
+
     private SpriteRenderer spriteRenderer;
     public Animator animator;
 
@@ -23,6 +26,16 @@ public class DuckMovement : MonoBehaviour
         StartCoroutine(Wander());
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
+        StartCoroutine(DirectionCheck());
+    }
+
+    private IEnumerator DirectionCheck()
+    {
+        while (true)
+        {
+            CheckMoveDirection();
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 
     private IEnumerator Wander()
@@ -74,27 +87,23 @@ public class DuckMovement : MonoBehaviour
 
     private void Update()
     {
-        //float currentX = transform.position.x;
-        //float previousX = currentX;
+        lastPos = currentPos;
+        currentPos = transform.position;
 
-        //transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-        //currentX = transform.position.x;
 
-        //if (rangeCheck.Length > 1 )
-        //{
-            //targetPosition = rangeCheck[0].gameObject.transform.position;
-            //transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-        //}
+    }
 
-        //deltaX = currentX - previousX;
-        if (targetPosition.x - transform.position.x < 0)
-        {
-            spriteRenderer.flipX = false;
-        }
-        else
+    void CheckMoveDirection()
+    {
+        if (currentPos.x - lastPos.x > 0)
         {
             spriteRenderer.flipX = true;
         }
+        if (currentPos.x - lastPos.x < 0)
+        {
+            spriteRenderer.flipX = false;
+        }
+        
     }
 
 
