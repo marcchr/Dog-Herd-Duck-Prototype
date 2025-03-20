@@ -6,6 +6,7 @@ public class HerdArea : MonoBehaviour
 {
     public ParticlesManager particlesManager;
     public GameManager gameManager;
+    [SerializeField] private AudioClip[] quacks;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +21,7 @@ public class HerdArea : MonoBehaviour
             //collision.gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
             //collision.gameObject.GetComponent<CircleCollider2D>().enabled = false;
             gameManager.AddToHerd();
+            SoundFXManager.Instance.PlayRandomSoundFXClip(quacks, transform, 1f);
 
             GameObject hearts = particlesManager.GetPooledObject();
             if (hearts != null)

@@ -19,6 +19,8 @@ public class DuckMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public Animator animator;
 
+    float quackChance = 0.1f;
+    [SerializeField] private AudioClip[] quacks;
     private void Start()
     {
         // targetPosition = transform.position;
@@ -59,6 +61,11 @@ public class DuckMovement : MonoBehaviour
                 yield return null;
             }
             animator.SetBool("isWalking", false);
+            
+            if (Random.Range(0f, 1f) < quackChance)
+            {
+                SoundFXManager.Instance.PlayRandomSoundFXClip(quacks, transform, 1f);
+            }
 
 
             float waitTime = Random.Range(waitTimeMin, waitTimeMax);

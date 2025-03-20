@@ -224,3 +224,10 @@ MonoBehaviour:
   waitTimeMin: 1
   waitTimeMax: 3
   animator: {fileID: 8078027358822107517}
+  quacks:
+  - {fileID: 8300000, guid: 491d10c3eec01974d91f728a48e789fa, type: 3}
+  - {fileID: 8300000, guid: 5e65702bb8e7f1f4cbbc7623b55b02d6, type: 3}
+  - {fileID: 8300000, guid: 14d30d7c4343f884c8ec84d50b504644, type: 3}
+  - {fileID: 8300000, guid: 6636eb3b17bc26140ae76cb8e14a1806, type: 3}
+  - {fileID: 8300000, guid: 1dd4aafe7eb1bdf45b5ea9cb5e27b1ad, type: 3}
+  - {fileID: 8300000, guid: d6d8fc4f0fc22374db64f22e77ed1bbe, type: 3}
