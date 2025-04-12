@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 1623372797355317780}
   m_Layer: 7
   m_Name: Duck
-  m_TagString: Untagged
+  m_TagString: Duck
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -134,7 +134,7 @@ Transform:
   m_GameObject: {fileID: 4467021681640774089}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.556875, y: 3.4785552, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -173,7 +173,7 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.05, y: -0.1}
+  m_Offset: {x: 0.05, y: 0.5}
   serializedVersion: 2
   m_Radius: 0.4
 --- !u!50 &7206994928770282196
@@ -224,6 +224,7 @@ MonoBehaviour:
   waitTimeMin: 1
   waitTimeMax: 3
   animator: {fileID: 8078027358822107517}
+  quackChance: 0
   quacks:
   - {fileID: 8300000, guid: 491d10c3eec01974d91f728a48e789fa, type: 3}
   - {fileID: 8300000, guid: 5e65702bb8e7f1f4cbbc7623b55b02d6, type: 3}

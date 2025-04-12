@@ -19,10 +19,12 @@ public class DuckSpawner : MonoBehaviour
             }
             else
             {
-                Instantiate(duckPrefab, spawnPoint, Quaternion.identity);
+                var duck = Instantiate(duckPrefab, spawnPoint, Quaternion.identity);
+                //duck.gameObject.GetComponentInChildren<Animator>().SetTrigger("spawnDuck");
             }
         }
     }
+
 
     // Update is called once per frame
     void Update()

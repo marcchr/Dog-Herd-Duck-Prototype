@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
     public GameObject spawner;
     public TextMeshProUGUI herdedNumText;
     public TextMeshProUGUI levelCompleteText;
-    int herdedNum = 0;
-    int herdTotal;
+    public int herdedNum = 0;
+    public int herdTotal;
 
     // Start is called before the first frame update
     void Start()

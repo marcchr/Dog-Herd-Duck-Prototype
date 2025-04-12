@@ -14,12 +14,14 @@ public class DuckMovement : MonoBehaviour
 
     private Vector2 lastPos;
     private Vector2 currentPos;
-    enum Direction { Right, Left, Still };
+
+    public bool isCaught = false;
+    public GameObject catcher;
 
     private SpriteRenderer spriteRenderer;
     public Animator animator;
 
-    float quackChance = 0.1f;
+    public float quackChance = 0.1f;
     [SerializeField] private AudioClip[] quacks;
     private void Start()
     {
@@ -33,7 +35,7 @@ public class DuckMovement : MonoBehaviour
 
     private IEnumerator DirectionCheck()
     {
-        while (true)
+        while (isCaught == false)
         {
             CheckMoveDirection();
             yield return new WaitForSeconds(0.1f);
@@ -42,7 +44,7 @@ public class DuckMovement : MonoBehaviour
 
     private IEnumerator Wander()
     {
-        while (true)
+        while (isCaught == false)
         {
             GetRandomPoint();
             SearchOtherDucks();
@@ -75,6 +77,18 @@ public class DuckMovement : MonoBehaviour
 
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Fox"))
+        {
+            if (isCaught == false)
+            {
+                isCaught = true;
+                catcher = collision.gameObject;
+            }
+        }
+    }
+
     private void GetRandomPoint()
     {
         float randomX = Random.Range(-4, 4);
@@ -97,7 +111,10 @@ public class DuckMovement : MonoBehaviour
         lastPos = currentPos;
         currentPos = transform.position;
 
-
+        if (isCaught == true)
+        {
+            transform.position = new Vector2(catcher.transform.position.x, catcher.transform.position.y);
+        }
     }
 
     void CheckMoveDirection()
