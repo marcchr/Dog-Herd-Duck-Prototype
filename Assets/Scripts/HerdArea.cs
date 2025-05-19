@@ -5,7 +5,7 @@ using UnityEngine;
 public class HerdArea : MonoBehaviour
 {
     public ParticlesManager particlesManager;
-    public GameManager gameManager;
+    public LevelManager levelManager;
     [SerializeField] private AudioClip[] quacks;
 
     // Start is called before the first frame update
@@ -20,7 +20,7 @@ public class HerdArea : MonoBehaviour
         {
             //collision.gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
             //collision.gameObject.GetComponent<CircleCollider2D>().enabled = false;
-            gameManager.AddToHerd();
+            levelManager.AddToHerd();
             SoundFXManager.Instance.PlayRandomSoundFXClip(quacks, transform, 1f);
 
             GameObject hearts = particlesManager.GetPooledObject();
@@ -39,7 +39,7 @@ public class HerdArea : MonoBehaviour
     {
         if (collision.GetComponent<DuckMovement>() != null)
         {
-            gameManager.SubtractFromHerd();
+            levelManager.SubtractFromHerd();
         }
     }
 }

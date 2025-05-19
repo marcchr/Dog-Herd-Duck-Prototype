@@ -12,7 +12,6 @@ public class HeartParticles : MonoBehaviour
         delay = GetComponent<ParticleSystem>().main.duration;
         coroutineStarted = true;
         StartCoroutine(SetActiveFalse());
-        Debug.Log("start coroutine");
     }
 
     IEnumerator SetActiveFalse()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DuckMovement : MonoBehaviour
 {
@@ -11,20 +12,30 @@ public class DuckMovement : MonoBehaviour
     public float moveSpeed = 2f;
     public float waitTimeMin = 1f, waitTimeMax = 6f;
     private Vector3 targetPosition;
+    private Rigidbody2D rb2D;
 
     private Vector2 lastPos;
     private Vector2 currentPos;
 
-    public bool isCaught = false;
-    public GameObject catcher;
+    [SerializeField] Image healthBar;
+    [SerializeField] private float maxHealth = 30;
+    private float currentHealth;
+
+    public bool isHiding = false;
+    //public bool isCaught = false;
+    //public bool isWandering = true;
+    //public GameObject catcher;
 
     private SpriteRenderer spriteRenderer;
     public Animator animator;
 
     public float quackChance = 0.1f;
     [SerializeField] private AudioClip[] quacks;
+    [SerializeField] private AudioClip duckCry;
     private void Start()
     {
+        currentHealth = maxHealth;
+        rb2D = GetComponent<Rigidbody2D>();
         // targetPosition = transform.position;
         targetLayer = LayerMask.GetMask("Ducks");
         StartCoroutine(Wander());
@@ -35,16 +46,17 @@ public class DuckMovement : MonoBehaviour
 
     private IEnumerator DirectionCheck()
     {
-        while (isCaught == false)
+        while (true)
         {
             CheckMoveDirection();
             yield return new WaitForSeconds(0.1f);
         }
+        
     }
 
     private IEnumerator Wander()
     {
-        while (isCaught == false)
+        while (true) //isCaught == false && isWandering == true)
         {
             GetRandomPoint();
             SearchOtherDucks();
@@ -56,7 +68,10 @@ public class DuckMovement : MonoBehaviour
 
             while (elapsedTime <= 1f)
             {
-                animator.SetBool("isWalking", true);
+                if (isHiding == false)
+                {
+                    animator.SetBool("isWalking", true);
+                }
 
                 elapsedTime += Time.deltaTime;
                 transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed*Time.deltaTime);
@@ -81,12 +96,21 @@ public class DuckMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Fox"))
         {
-            if (isCaught == false)
-            {
-                isCaught = true;
-                catcher = collision.gameObject;
-            }
+            
+            //if (isCaught == false)
+            //{
+            //    isCaught = true;
+            //    isWandering = false;
+            //    catcher = collision.gameObject;
+            //}
         }
+    }
+
+    public void TakeDamage()
+    {
+        currentHealth--;
+        healthBar.fillAmount = currentHealth / maxHealth;
+        SoundFXManager.Instance.PlaySoundFXClip(duckCry, transform, 1f);
     }
 
     private void GetRandomPoint()
@@ -111,10 +135,34 @@ public class DuckMovement : MonoBehaviour
         lastPos = currentPos;
         currentPos = transform.position;
 
-        if (isCaught == true)
+        if (isHiding == true)
         {
-            transform.position = new Vector2(catcher.transform.position.x, catcher.transform.position.y);
+            targetPosition = transform.position;
+            rb2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         }
+        else
+        {
+            rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+        if (currentHealth <= 0)
+        {
+            Debug.Log("Duck died");
+            LevelManager.Instance.LoseLife();
+            Destroy(gameObject);
+            //gameObject.SetActive(false);
+        }
+        //if (isCaught == true)
+        //{
+        //    isWandering = false;
+        //    transform.position = new Vector2(catcher.transform.position.x, catcher.transform.position.y);
+        //}
+        //else if (isCaught == false && isWandering == false)
+        //{
+        //    isWandering = true;
+        //    StartCoroutine(Wander());
+        //}
+        
     }
 
     void CheckMoveDirection()

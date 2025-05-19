@@ -2,22 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FieldOfView : MonoBehaviour
+public class FieldOfView : Singleton<FieldOfView>
 {
     public float radius = 5f;
     [Range(1, 360)] public float angle = 45f;
     public LayerMask targetLayer;
+    public LayerMask foxLayer;
     public LayerMask obstructionLayer;
 
     public GameObject playerRef;
     public Collider2D[] rangeCheck;
 
     public List<Transform> objectsInFOV;
+    public List<Transform> foxInFOV;
     public float pushSpeed = 3f;
 
     void Start()
     {
         objectsInFOV = new List<Transform>();
+        foxInFOV = new List<Transform>();
         // playerRef = GameObject.FindGameObjectWithTag("Player");
         StartCoroutine(FOVCheck());
     }
@@ -30,6 +33,7 @@ public class FieldOfView : MonoBehaviour
         {
             yield return wait;
             FOV();
+            CheckForFox();
             //PushAway();
         }
     }
@@ -63,29 +67,58 @@ public class FieldOfView : MonoBehaviour
         }
     }
 
+    private void CheckForFox()
+    {
+        foxInFOV.Clear();
+        rangeCheck = Physics2D.OverlapCircleAll(transform.position, radius, foxLayer);
+
+        if (rangeCheck.Length > 0)
+        {
+            for (int i = 0; i < rangeCheck.Length; i++)
+            {
+                Transform target = rangeCheck[i].transform;
+
+                Vector2 directionToTarget = (target.position - transform.position).normalized;
+
+                if (Vector2.Angle(transform.up, directionToTarget) < angle * 0.5)
+                {
+                    float distanceToTarget = Vector2.Distance(transform.position, target.position);
+
+                    if (!Physics2D.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionLayer))
+                    {
+                        foxInFOV.Add(target);
+                    }
+                }
+            }
+        }
+    }
+
     private void PushAway()
     {
         float speedMultiplier = 1f;
-        float step = pushSpeed * speedMultiplier * Time.deltaTime;
+        //float step = pushSpeed * speedMultiplier * Time.deltaTime;
         for (int i = 0; i < objectsInFOV.Count; i++)
         {
             Transform target = objectsInFOV[i].transform;
             Vector2 directionToTarget = (target.position - transform.position).normalized;
-            
-            speedMultiplier = 5f * radius/Vector2.Distance(target.position, transform.position);
 
-            target.transform.position = Vector2.MoveTowards(target.position, (Vector2)target.position+directionToTarget, step);
+            speedMultiplier = 2f; //* radius/Vector2.Distance(target.position, transform.position);
+
+            if (target.GetComponent<DuckMovement>().isHiding == false)
+            {
+                target.transform.position = Vector2.MoveTowards(target.position, (Vector2)target.position + directionToTarget, pushSpeed * speedMultiplier * Time.deltaTime);
+            }
         }
 
-        for (int i = 0; i < rangeCheck.Length; i++)
-        {
-            Transform target = rangeCheck[i].transform;
-            Vector2 directionToTarget = (target.position - transform.position).normalized;
+        //for (int i = 0; i < rangeCheck.Length; i++)
+        //{
+        //    Transform target = rangeCheck[i].transform;
+        //    Vector2 directionToTarget = (target.position - transform.position).normalized;
 
-            speedMultiplier = 1f * radius / Vector2.Distance(target.position, transform.position);
+        //    speedMultiplier = 1f; //* radius / Vector2.Distance(target.position, transform.position);
 
-            target.transform.position = Vector2.MoveTowards(target.position, (Vector2)target.position + directionToTarget, step);
-        }
+        //    target.transform.position = Vector2.MoveTowards(target.position, (Vector2)target.position + directionToTarget, pushSpeed * speedMultiplier * Time.deltaTime);
+        //}
     }
 
     private void FixedUpdate()
