@@ -17,7 +17,7 @@ public class ParticlesManager : MonoBehaviour
         GameObject temp;
         for (int i = 0; i < amountToPool; i++)
         {
-            temp = Instantiate(heartParticlesPrefab);
+            temp = Instantiate(heartParticlesPrefab, transform);
             temp.SetActive(false);
             pooledObjects.Add(temp);
         }

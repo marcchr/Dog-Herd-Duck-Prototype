@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialManager : MonoBehaviour
+public class TutorialManager2 : MonoBehaviour
 {
     public GameObject[] popUps;
     [SerializeField] private int popUpIndex;
     [SerializeField] private GameObject dogFOV;
+    [SerializeField] private GameObject[] feathers;
     [SerializeField] private GameObject upperLeftUI;
+    [SerializeField] private GameObject featherCounterUI;
     public float waitTime = 3f;
 
-    [SerializeField] private GameObject fox;
-
+    // [SerializeField] private GameObject fox;
 
     void Update()
     {
@@ -29,41 +30,41 @@ public class TutorialManager : MonoBehaviour
 
         if (popUpIndex == 0)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
-            {
-                popUpIndex++;
-            }
-        }
-        else if (popUpIndex == 1)
-        {
-            if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) && Input.GetKey(KeyCode.LeftShift))
-            {
-                dogFOV.SetActive(true);
-                popUpIndex++;
-            }
-        }
-        else if (popUpIndex == 2)
-        {
-            if ((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0))
-            {
-                popUpIndex++;
-                //set active foxes
-            }
-        }
-        else if (popUpIndex == 3)
-        {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 upperLeftUI.SetActive(true);
                 popUpIndex++;
             }
         }
-        else if (popUpIndex == 4)
+        else if (popUpIndex == 1)
         {
-            if (waitTime <= 0)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                popUps[4].SetActive(false);
-                fox.SetActive(true);
+                featherCounterUI.SetActive(true);
+                LevelManager.Instance.AddFeather();
+                LevelManager.Instance.AddFeather();
+                LevelManager.Instance.AddFeather();
+                popUpIndex++;
+            }
+        }
+        else if (popUpIndex == 2)
+        {
+            if (Input.GetKeyDown(KeyCode.E) && LevelManager.Instance.feathers == 2)
+            {
+                for (int j = 0; j < feathers.Length; j++)
+                {
+                    feathers[j].SetActive(true);
+                }
+                popUpIndex++;
+            }
+        }
+        else if (popUpIndex == 3)
+        {
+            if (waitTime <= 0f)
+            {
+                LevelManager.Instance.hasCountdown = true;
+                dogFOV.SetActive(true);
+                popUps[3].SetActive(false);
             }
             else
             {

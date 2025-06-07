@@ -96,6 +96,10 @@ public class PlayerMovement : MonoBehaviour
             foreach (Transform duck in FieldOfView.Instance.objectsInFOV)
             {
                 duck.gameObject.GetComponent<DuckMovement>().isHiding = false;
+                if (LevelManager.Instance.hasCountdown)
+                {
+                    duck.gameObject.GetComponent<DuckMovement>().isFound = true;
+                }
             }
         }
         //if (FieldOfView.Instance.objectsInFOV != null)

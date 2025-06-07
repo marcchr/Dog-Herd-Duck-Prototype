@@ -22,6 +22,7 @@ public class DuckMovement : MonoBehaviour
     private float currentHealth;
 
     public bool isHiding = false;
+    public bool isFound = false;
     //public bool isCaught = false;
     //public bool isWandering = true;
     //public GameObject catcher;
@@ -118,6 +119,12 @@ public class DuckMovement : MonoBehaviour
         float randomX = Random.Range(-4, 4);
         float randomY = Random.Range(-4, 4);
         targetPosition = new Vector3(transform.position.x + randomX, transform.position.y + randomY, transform.position.z);
+
+        if (isFound == true)
+        {
+            Vector2 direction = (transform.position - new Vector3(0, 0).normalized) * moveSpeed * 3f;
+            targetPosition = new Vector2(transform.position.x + direction.x, transform.position.y + direction.y);
+        }
     }
 
     private void SearchOtherDucks()
@@ -128,6 +135,11 @@ public class DuckMovement : MonoBehaviour
             targetPosition = rangeCheck[Random.Range(0, rangeCheck.Length-1)].transform.position;
         }
 
+        if (isFound == true)
+        {
+            Vector2 direction = ((new Vector3(0, 0)- transform.position).normalized) * moveSpeed * 3f;
+            targetPosition = new Vector2(transform.position.x + direction.x, transform.position.y + direction.y);
+        }
     }
 
     private void Update()
@@ -144,6 +156,8 @@ public class DuckMovement : MonoBehaviour
         {
             rb2D.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
+
+        
 
         if (currentHealth <= 0)
         {

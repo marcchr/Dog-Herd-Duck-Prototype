@@ -38,4 +38,7 @@ public class SceneController : MonoBehaviour
             buttons[i] = levelButtons.transform.GetChild(i).GetComponent<Button>();
         }
     }
+
+    
+    
 }
