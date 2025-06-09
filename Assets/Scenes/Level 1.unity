@@ -22248,7 +22248,7 @@ MonoBehaviour:
   timerText: {fileID: 383345358}
   inGamePanel: {fileID: 102030563}
   hasCountdown: 0
-  backgroundSprite: {fileID: 0}
+  backgroundSprite: {fileID: 1672184804}
   targetColor: {r: 0, g: 0, b: 0, a: 0}
   transitionDuration: 0
   dayTimerFill: {fileID: 0}

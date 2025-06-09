@@ -19,7 +19,10 @@ public class GrassAnimation : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        animator.SetTrigger("isWalkedOn");
-        SoundFXManager.Instance.PlaySoundFXClip(grassRustle, transform, 1f);
+        if (collision.CompareTag("Player"))
+        {
+            animator.SetTrigger("isWalkedOn");
+            SoundFXManager.Instance.PlaySoundFXClip(grassRustle, transform, 1f);
+        }
     }
 }

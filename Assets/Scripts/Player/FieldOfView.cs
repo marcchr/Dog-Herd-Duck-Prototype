@@ -135,7 +135,7 @@ public class FieldOfView : Singleton<FieldOfView>
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, radius);
+        //UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, radius);
 
         Vector3 angle01 = DirectionFromAngle(-transform.eulerAngles.z, -angle * 0.5f);
         Vector3 angle02 = DirectionFromAngle(-transform.eulerAngles.z, angle * 0.5f);
